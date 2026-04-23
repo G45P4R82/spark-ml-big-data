@@ -11,6 +11,9 @@
         href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;700&family=Inter:wght@400;600&family=JetBrains+Mono&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js para os gráficos de barras -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         :root {
             --bg-main: #0d1117;
@@ -22,6 +25,9 @@
             --math-bg: #0a0a0a;
             --chart-red: #f85149;
             --chart-green: #3fb950;
+            --chart-blue: #58a6ff;
+            --chart-yellow: #e3b341;
+            --chart-purple: #bc8cff;
         }
 
         * {
@@ -168,35 +174,6 @@
             padding-top: 15px;
         }
 
-        .chart-svg {
-            width: 100%;
-            height: 280px;
-            margin: 20px auto;
-        }
-
-        .axis {
-            stroke: var(--text-dim);
-            stroke-width: 1;
-        }
-
-        .grid-line {
-            stroke: var(--border);
-            stroke-width: 1;
-            stroke-dasharray: 4;
-        }
-
-        .data-line-gbt {
-            stroke: var(--chart-red);
-            stroke-width: 3;
-            fill: none;
-        }
-
-        .data-line-lr {
-            stroke: var(--chart-green);
-            stroke-width: 3;
-            fill: none;
-        }
-
         .presenter-box {
             border: 1px solid var(--accent);
             padding: 25px 50px;
@@ -231,7 +208,7 @@
         /* SVG Workflow Styling */
         .workflow-svg {
             width: 100%;
-            max-width: 500px;
+            max-width: 800px;
             height: auto;
         }
 
@@ -259,7 +236,6 @@
             fill: none;
         }
 
-        /* Dica de navegação apenas no primeiro slide */
         .nav-hint {
             position: absolute;
             bottom: 60px;
@@ -285,12 +261,32 @@
                 opacity: 0.4;
             }
         }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .huge-text {
+            font-size: 80px;
+            font-weight: 700;
+            color: var(--chart-red);
+            font-family: 'Crimson Pro', serif;
+            margin: 20px 0;
+        }
     </style>
+    <script src="https://unpkg.com/gojs/release/go.js"></script>
 </head>
 
 <body>
 
-    <!-- SLIDE 1: TITULO -->
+    <!-- BLOCO 1: INTRODUÇÃO (6 Slides) -->
+
+    <!-- SLIDE 1: CAPA -->
     <div class="slide-container active" id="slide1">
         <div class="academic-header-info">
             MO809A_2026S1 - Tópicos em Computação Distribuída<br>
@@ -320,500 +316,427 @@
             laterais para navegar</div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 1 / 11</span>
+            <span class="slide-counter">Slide 1 / 17</span>
         </div>
     </div>
 
-    <!-- SLIDE 2: WORKFLOW -->
+    <!-- SLIDE 2: O Desafio do Big Data -->
     <div class="slide-container" id="slide2">
-        <h2 class="slide-title">Fluxo de Trabalho do Framework</h2>
+        <h2 class="slide-title">O Desafio do Big Data</h2>
         <div class="content-area">
-            <div style="display: flex; flex-direction: column; gap: 30px; width: 100%;">
-                <div class="info-card" style="align-items: center; background: #000; width: 100%; padding: 40px 20px;">
-                    <svg viewBox="0 0 570 100" class="workflow-svg" style="max-width: 100%;">
-                        <rect x="20" y="20" width="110" height="35" rx="5" class="node" />
-                        <text x="75" y="42" class="node-text">Ingestão (HDFS)</text>
-
-                        <rect x="160" y="20" width="110" height="35" rx="5" class="node" />
-                        <text x="215" y="42" class="node-text">Pré-Processo</text>
-
-                        <rect x="300" y="20" width="110" height="35" rx="5" class="node" />
-                        <text x="355" y="42" class="node-text">Treino (MLlib)</text>
-
-                        <rect x="440" y="20" width="110" height="35" rx="5" class="node" />
-                        <text x="495" y="42" class="node-text">Avaliação</text>
-
-                        <line x1="130" y1="37" x2="160" y2="37" class="arrow-line" />
-                        <polygon points="160,37 153,33 153,41" class="arrow" />
-
-                        <line x1="270" y1="37" x2="300" y2="37" class="arrow-line" />
-                        <polygon points="300,37 293,33 293,41" class="arrow" />
-
-                        <line x1="410" y1="37" x2="440" y2="37" class="arrow-line" />
-                        <polygon points="440,37 433,33 433,41" class="arrow" />
-
-                        <text x="285" y="85" fill="var(--text-dim)" font-size="10" text-anchor="middle">Fig 1. Pipeline
-                            de Dados Spark</text>
-                    </svg>
-                </div>
-                <div class="info-card" style="width: 100%;">
-                    <p style="margin-bottom: 15px;"><strong>Fases Críticas do Artigo:</strong></p>
-                    <div style="display: flex; justify-content: space-around; text-align: left;">
-                        <ul style="padding-left: 20px; margin: 0;">
-                            <li><strong>Ingestão:</strong> Leitura paralela de DataFrames.</li>
-                            <li><strong>Preprocessing:</strong> VectorAssembler & Scaling.</li>
-                        </ul>
-                        <ul style="padding-left: 20px; margin: 0;">
-                            <li><strong>Tuning:</strong> Grid Search distribuído nos Workers.</li>
-                            <li><strong>Inference:</strong> Pipelines serializados para baixa latência.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="academic-footer">
-            <span>IC - Unicamp | 9 Abr 2026</span>
-            <span>Slide 2 / 11</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 3: DATASETS -->
-    <div class="slide-container" id="slide3">
-        <h2 class="slide-title">Datasets de Benchmark</h2>
-        <div class="content-area">
-            <div class="info-card" style="max-width: 900px; height: auto;">
-                <p style="margin-bottom: 20px;"><strong>Cluster:</strong> 8 nodos (64 cores totais / 512GB RAM) sobre
-                    YARN.</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Dataset</th>
-                            <th>Registros</th>
-                            <th>Atributos</th>
-                            <th>Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>NYC Taxi Trip Duration</td>
-                            <td>~100.000.000</td>
-                            <td>Série Temporal</td>
-                            <td>Regressão</td>
-                        </tr>
-                        <tr>
-                            <td>Netflix Prize</td>
-                            <td>~100.000.000</td>
-                            <td>Matriz Esparsa</td>
-                            <td>Regressão</td>
-                        </tr>
-                        <tr>
-                            <td>Higgs Boson</td>
-                            <td>~11.000.000</td>
-                            <td>Eventos Físicos</td>
-                            <td>Classificação</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="academic-footer">
-            <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 3 / 11</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 4: HIPERPARÂMETROS -->
-    <div class="slide-container" id="slide4">
-        <h2 class="slide-title">Otimização de Hiperparâmetros</h2>
-        <div class="content-area">
-            <div class="two-column">
+            <div class="two-column" style="align-items: flex-start;">
                 <div class="info-card">
-                    <p style="text-align: center; color: var(--accent); font-weight: 700;">Regressão (Table 1)</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Modelo</th>
-                                <th>Setup Ótimo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Linear Regression</td>
-                                <td>λ: 0.1</td>
-                            </tr>
-                            <tr>
-                                <td>Random Forest</td>
-                                <td>Trees: 200</td>
-                            </tr>
-                            <tr>
-                                <td>Gradient-Boosted Trees</td>
-                                <td>Depth: 5</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="info-card">
-                    <p style="text-align: center; color: var(--accent); font-weight: 700;">Classificação (Table 2)</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Modelo</th>
-                                <th>Setup Ótimo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Logistic Regression</td>
-                                <td>λ: 0.01</td>
-                            </tr>
-                            <tr>
-                                <td>Gradient-Boosted Trees</td>
-                                <td>Iter: 200</td>
-                            </tr>
-                            <tr>
-                                <td>Support Vector Machines</td>
-                                <td>Iter: 1000</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="academic-footer">
-            <span>IC - Unicamp | 9 Abr 2026</span>
-            <span>Slide 4 / 11</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 5: ESCALABILIDADE -->
-    <div class="slide-container" id="slide5">
-        <h2 class="slide-title">Resultados de Escalabilidade</h2>
-        <div class="content-area">
-            <div class="info-card" style="max-width: 1000px; height: auto;">
-                <p style="margin-bottom: 15px;">Tempo de Treinamento (Minutos) vs. Volume:</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>% Dados</th>
-                            <th>Linear Regression (NYC)</th>
-                            <th>Random Forest (NYC)</th>
-                            <th>Gradient-Boosted Trees (NYC)</th>
-                            <th>Gradient-Boosted Trees (Higgs)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>10%</td>
-                            <td>4.5</td>
-                            <td>13.0</td>
-                            <td>18.5</td>
-                            <td>18.0</td>
-                        </tr>
-                        <tr>
-                            <td>50%</td>
-                            <td>13.5</td>
-                            <td>40.0</td>
-                            <td>47.0</td>
-                            <td>85.0</td>
-                        </tr>
-                        <tr>
-                            <td>100%</td>
-                            <td style="color:var(--chart-green); font-weight:700;">25.5</td>
-                            <td>70.0</td>
-                            <td style="color:var(--chart-red); font-weight:700;">84.5</td>
-                            <td>170.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="academic-footer">
-            <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 5 / 11</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 6: GRAFICO -->
-    <div class="slide-container" id="slide6">
-        <h2 class="slide-title">Análise de Tendência</h2>
-        <div class="content-area">
-            <div class="two-column">
-                <div class="info-card" style="background: #000;">
-                    <svg class="chart-svg" viewBox="0 0 400 200">
-                        <line x1="40" y1="20" x2="40" y2="180" class="axis" />
-                        <line x1="40" y1="180" x2="380" y2="180" class="axis" />
-                        <line x1="40" y1="60" x2="380" y2="60" class="grid-line" />
-                        <line x1="40" y1="120" x2="380" y2="120" class="grid-line" />
-                        <text x="40" y="195" fill="var(--text-dim)" font-size="10">10%</text>
-                        <text x="210" y="195" fill="var(--text-dim)" font-size="10">50%</text>
-                        <text x="360" y="195" fill="var(--text-dim)" font-size="10">100%</text>
-                        <path d="M 40 170 L 210 110 L 380 40" class="data-line-gbt" />
-                        <path d="M 40 178 L 210 165 L 380 150" class="data-line-lr" />
-                        <circle cx="380" cy="40" r="4" fill="var(--chart-red)" />
-                        <circle cx="380" cy="150" r="4" fill="var(--chart-green)" />
-                    </svg>
-                    <div style="display: flex; gap: 20px; font-size: 12px; justify-content: center;">
-                        <span><i class="fa-solid fa-square" style="color:var(--chart-red)"></i> Gradient-Boosted Trees</span>
-                        <span><i class="fa-solid fa-square" style="color:var(--chart-green)"></i> Linear Regression</span>
-                    </div>
-                </div>
-                <div class="info-card">
-                    <ul style="padding-left: 10px;">
-                        <li style="margin-bottom: 25px;"><strong>Crescimento Linear:</strong> O Spark gerencia o
-                            overhead de cluster sem gargalos exponenciais.</li>
-                        <li><strong>Eficiência In-Memory:</strong> Redução drástica de latência em modelos de árvores.
+                    <p style="color: var(--accent); font-weight: 700; margin-bottom: 15px; font-size: 22px;"><i class="fa-solid fa-database"></i> A Explosão de Dados</p>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li>Geração sem precedentes por Redes Sociais, IoT, E-commerce, etc.</li>
+                        <li>Os 3 V's do Big Data limitam as ferramentas analíticas convencionais:
+                            <ul style="margin-top: 10px;">
+                                <li><strong>Volume:</strong> Terabytes e Petabytes.</li>
+                                <li><strong>Velocidade:</strong> Fluxo contínuo (streaming).</li>
+                                <li><strong>Variedade:</strong> Dados estruturados e não-estruturados.</li>
+                            </ul>
                         </li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <p style="color: var(--accent); font-weight: 700; margin-bottom: 15px; font-size: 22px;"><i class="fa-solid fa-microchip"></i> O Limite Tradicional</p>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li>Bancos de dados relacionais em um único nó não escalam fisicamente (Vertical Scaling).</li>
+                        <li>Técnicas analíticas antigas não encontram padrões ocultos complexos em grandes massas de dados.</li>
+                        <li><strong>Solução:</strong> Computação Distribuída (Escalonamento Horizontal) + Machine Learning.</li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 6 / 11</span>
+            <span class="slide-counter">Slide 2 / 17</span>
         </div>
     </div>
 
-    <!-- SLIDE 7: REGRESSÃO -->
-    <div class="slide-container" id="slide7">
-        <h2 class="slide-title">Métricas de Erro (Regressão)</h2>
+    <!-- SLIDE 3: O Paradigma Hadoop / MapReduce -->
+    <div class="slide-container" id="slide3">
+        <h2 class="slide-title">O Paradigma Hadoop & MapReduce</h2>
         <div class="content-area">
-            <div class="two-column">
-                <div class="info-card">
-                    <p style="text-align: center; margin-bottom: 10px; font-weight: 700;">NYC Taxi</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Modelo</th>
-                                <th>Root Mean Squared Error (RMSE)</th>
-                                <th>Mean Absolute Error (MAE)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Gradient-Boosted Trees</strong></td>
-                                <td><strong>5.6</strong></td>
-                                <td><strong>4.1</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Random Forest</td>
-                                <td>5.8</td>
-                                <td>4.3</td>
-                            </tr>
-                            <tr>
-                                <td>Linear Regression</td>
-                                <td>8.1</td>
-                                <td>6.2</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="info-card">
-                    <p style="text-align: center; margin-bottom: 10px; font-weight: 700;">Netflix Prize</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Modelo</th>
-                                <th>Root Mean Squared Error (RMSE)</th>
-                                <th>Mean Absolute Error (MAE)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Gradient-Boosted Trees</strong></td>
-                                <td><strong>0.95</strong></td>
-                                <td><strong>0.78</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Random Forest</td>
-                                <td>1.05</td>
-                                <td>0.85</td>
-                            </tr>
-                            <tr>
-                                <td>Linear Regression</td>
-                                <td>1.18</td>
-                                <td>0.95</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="info-card" style="max-width: 900px;">
+                <p style="font-size: 24px; font-weight: bold; color: var(--chart-yellow); margin-bottom: 20px;">A Primeira Geração de Processamento Distribuído</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Como Funciona:</strong> Divide o trabalho em milhares de máquinas. O <em>Map</em> filtra/ordena, o <em>Reduce</em> sumariza os resultados.</li>
+                    <li><strong>O Gargalo Crítico (I/O):</strong> É um framework focado em <strong>Disco (HDFS)</strong>.
+                        <ul style="margin-top: 10px;">
+                            <li>Entre cada etapa de Map e Reduce, os dados intermediários são gravados fisicamente nos discos rígidos do cluster.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="math-container" style="margin-top: 30px; font-size: 20px; border-color: var(--chart-red);">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--chart-red);"></i> Problema para Machine Learning:
+                    <br>Algoritmos de ML são fortemente <strong>iterativos</strong> (repetem cálculos sobre o mesmo dado milhares de vezes, ex: Gradient Descent). O I/O constante de disco do Hadoop torna o treinamento inviável ou absurdamente lento.
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 7 / 11</span>
+            <span class="slide-counter">Slide 3 / 17</span>
         </div>
     </div>
 
-    <!-- SLIDE 8: CLASSIFICAÇÃO -->
-    <div class="slide-container" id="slide8">
-        <h2 class="slide-title">Métricas de Classificação (Higgs)</h2>
+    <!-- SLIDE 4: A Revolução do Apache Spark -->
+    <div class="slide-container" id="slide4">
+        <h2 class="slide-title">A Revolução do Apache Spark</h2>
+        <div class="content-area">
+            <div class="two-column" style="align-items: center;">
+                <div class="info-card">
+                    <p style="color: var(--accent); font-weight: 700; margin-bottom: 15px; font-size: 22px;"><i class="fa-solid fa-bolt"></i> Processamento In-Memory</p>
+                    <ul style="padding-left: 20px; margin: 0;">
+                        <li>Diferente do Hadoop, o Spark processa os dados inteiramente na <strong>Memória RAM</strong> (In-Memory Computing).</li>
+                        <li><strong>Evita I/O de disco:</strong> Dados intermediários ficam cacheados na memória entre as iterações.</li>
+                        <li>Pode ser de <strong>10x a 100x mais rápido</strong> que o Hadoop MapReduce para cargas de trabalho iterativas.</li>
+                    </ul>
+                </div>
+                <div class="info-card" style="text-align: center;">
+                    <div style="font-size: 60px; color: var(--chart-green); margin-bottom: 10px;"><i class="fa-solid fa-gauge-high"></i></div>
+                    <p style="font-size: 18px; margin-bottom: 15px;">Ideal para as operações intensivas de otimização matemática exigidas pelos modelos de Machine Learning (como backpropagation e divisão de árvores).</p>
+                    <p style="font-size: 16px; color: var(--text-dim);">Mantém tolerância a falhas (via RDDs/DataFrames) mesmo operando em memória volátil.</p>
+                </div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 4 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: O que é o Spark MLlib? -->
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title">O que é o Spark MLlib?</h2>
         <div class="content-area">
             <div class="info-card" style="max-width: 1000px;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Algoritmo</th>
-                            <th>Accuracy</th>
-                            <th>Precision</th>
-                            <th>Recall</th>
-                            <th>Area Under the Curve (AUC)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Gradient-Boosted Trees</strong></td>
-                            <td style="font-weight:700">90.5%</td>
-                            <td>91.5%</td>
-                            <td>89.5%</td>
-                            <td><strong>0.97</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Random Forest</td>
-                            <td>90.0%</td>
-                            <td>91.0%</td>
-                            <td>89.2%</td>
-                            <td>0.96</td>
-                        </tr>
-                        <tr>
-                            <td>Support Vector Machines</td>
-                            <td>88.5%</td>
-                            <td>89.5%</td>
-                            <td>87.5%</td>
-                            <td>0.95</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="math-container" style="margin-top: 30px;">
-                    Area Under the Curve (AUC) = 0.97 (Performance de Excelência)
+                <p style="font-size: 20px; margin-bottom: 20px;">A biblioteca nativa e unificada de Machine Learning do Apache Spark.</p>
+                
+                <div class="two-column" style="gap: 30px;">
+                    <div>
+                        <ul style="padding-left: 20px; margin: 0; font-size: 16px;">
+                            <li><strong>Algoritmos Distribuídos:</strong> Implementações de Regressão, Classificação, Clustering e Filtragem Colaborativa projetadas desde o zero para rodar em clusters.</li>
+                            <li><strong>Pipeline API:</strong> Inspirada no Scikit-Learn. Permite encadear transformações de dados e treinamento de modelos de forma modular.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul style="padding-left: 20px; margin: 0; font-size: 16px;">
+                            <li><strong>Tuning Simplificado:</strong> Suporte nativo a Grid Search e Cross-Validation rodando paralelamente em vários nodos (Workers).</li>
+                            <li><strong>Operações Matriciais:</strong> Algebra linear escalável (BLAS local + distribuição inteligente) otimizada para DataFrames de alta dimensionalidade.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 8 / 11</span>
+            <span class="slide-counter">Slide 5 / 17</span>
         </div>
     </div>
 
-    <!-- SLIDE 9: RECURSOS -->
-    <div class="slide-container" id="slide9">
-        <h2 class="slide-title">Eficiência Computacional</h2>
+    <!-- SLIDE 6: Workflow do Spark MLlib (A Figura 1 do Artigo) -->
+    <div class="slide-container" id="slide6">
+        <h2 class="slide-title">Workflow de ML no Spark</h2>
         <div class="content-area">
-            <div class="two-column">
-                <div class="info-card">
-                    <p style="color:var(--accent); text-align: center; font-weight:700;">Carga de CPU (%)</p>
-                    <table>
-                        <tr>
-                            <td>Linear Regression</td>
-                            <td>50%</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Gradient-Boosted Trees</strong></td>
-                            <td><strong>80%</strong></td>
-                        </tr>
-                        <tr>
-                            <td>K-Nearest Neighbors</td>
-                            <td>70%</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="info-card">
-                    <p style="color:var(--accent); text-align: center; font-weight:700;">Carga de RAM (%)</p>
-                    <table>
-                        <tr>
-                            <td>Linear Regression</td>
-                            <td>40%</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Gradient-Boosted Trees</strong></td>
-                            <td><strong>70%</strong></td>
-                        </tr>
-                        <tr>
-                            <td>K-Nearest Neighbors</td>
-                            <td>60%</td>
-                        </tr>
-                    </table>
-                </div>
+            <div class="info-card" style="align-items: center; background: #fff; width: 100%; max-width: 1100px; padding: 20px;">
+                <img src="figura1.png" alt="Workflow de ML no Spark" style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px;">
             </div>
-            <p style="margin-top: 30px; font-size: 16px; color: var(--text-dim);">
-                <em>Nota:</em> O Gradient-Boosted Trees utiliza o cluster de forma mais intensiva para otimizar gradientes, resultando em
-                maior precisão.
+            <p style="margin-top: 20px; font-size: 16px; max-width: 900px; color: var(--text-dim);">
+                Toda essa arquitetura é executada em paralelo através de dezenas de "Executors" sobre o gerenciador de recursos YARN, processando enormes blocos de dados contíguos simultaneamente.
             </p>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 9 / 11</span>
+            <span class="slide-counter">Slide 6 / 17</span>
         </div>
     </div>
 
-    <!-- SLIDE 10: GLOSSÁRIO -->
-    <div class="slide-container" id="slide10">
-        <h2 class="slide-title">Glossário: Modelos e Métricas</h2>
-        <div class="content-area" style="font-size: 14px; line-height: 1.6;">
-            <div class="two-column" style="align-items: flex-start; gap: 40px; margin-top: -20px;">
-                <div class="info-card">
-                    <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px; font-size: 16px;">Modelos de Machine Learning</p>
-                    <ul style="padding-left: 20px; text-align: left; margin: 0; font-size: 14px;">
-                        <li><strong>Linear Regression:</strong> Regressão Linear. Predição de valores contínuos (ex: viagens de táxi).</li>
-                        <li><strong>Logistic Regression:</strong> Regressão Logística. Para classificação (ex: detectar Higgs).</li>
-                        <li><strong>Random Forest:</strong> Floresta Aleatória.</li>
-                        <li><strong>Gradient-Boosted Trees:</strong> Árvores Impulsionadas por Gradiente.</li>
-                        <li><strong>Support Vector Machines (SVM):</strong> Máquinas de Vetores de Suporte. Classificação.</li>
-                        <li><strong>Support Vector Regressor (SVR):</strong> Máquinas de Vetores de Suporte para regressão.</li>
-                        <li><strong>K-Nearest Neighbors:</strong> K-Vizinhos Mais Próximos.</li>
-                    </ul>
-                </div>
-                <div class="info-card">
-                    <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px; font-size: 16px;">Métricas de Avaliação</p>
-                    <ul style="padding-left: 20px; text-align: left; margin: 0; font-size: 14px;">
-                        <li><strong>Root Mean Squared Error (RMSE):</strong> Raiz do Erro Quadrático Médio.</li>
-                        <li><strong>Mean Absolute Error (MAE):</strong> Erro Absoluto Médio.</li>
-                        <li><strong>Area Under the Curve (AUC):</strong> Área Sob a Curva ROC (Receiver Operating Characteristic).</li>
+    <!-- BLOCO 2: MOTIVAÇÃO E SETUP (2 Slides) -->
+
+    <!-- SLIDE 7: Motivação do Artigo -->
+    <div class="slide-container" id="slide7">
+        <h2 class="slide-title">Motivação do Artigo</h2>
+        <div class="content-area">
+            <div class="info-card" style="max-width: 900px;">
+                <p style="color: var(--accent); font-weight: 700; margin-bottom: 20px; font-size: 22px; text-align: center;"><i class="fa-solid fa-bullseye"></i> O Objetivo Principal</p>
+                <div style="font-size: 18px; line-height: 1.6; text-align: justify;">
+                    <p>Enquanto muitos estudos focam no desenvolvimento teórico de novos algoritmos de Machine Learning, existe um <strong>gap na aplicação prática (deployment)</strong> de modelos clássicos em cenários industriais reais de Big Data.</p>
+                    <p>A pesquisa busca responder:</p>
+                    <ul style="padding-left: 20px;">
+                        <li>Quão escaláveis são as implementações distribuídas nativas do Apache Spark?</li>
+                        <li>Qual é o verdadeiro <strong>Trade-off</strong> entre <em>Performance Preditiva</em> (Acurácia/RMSE) e <em>Custo Computacional</em> (Tempo, CPU e RAM) em datasets da ordem de 100 milhões de registros?</li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span>Slide 10 / 11</span>
+            <span class="slide-counter">Slide 7 / 17</span>
         </div>
     </div>
 
-    <!-- SLIDE 11: CONCLUSAO -->
-    <div class="slide-container" id="slide11">
-        <h2 class="slide-title">Conclusões Finais</h2>
+    <!-- SLIDE 8: Setup Experimental (O Cluster) -->
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title">Setup Experimental: Arquitetura do Cluster</h2>
+        <div class="content-area" style="width: 100%; height: 100%;">
+            <div class="info-card" style="background: var(--bg-main); border: 1px solid var(--border); padding: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                <!-- GoJS Container taking full space -->
+                <div id="clusterDiagram" style="width: 100%; height: 500px; background: transparent; display: block;"></div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 8 / 17</span>
+        </div>
+    </div>
+
+    <!-- BLOCO 3: DATASETS E MODELAGEM (3 Slides) -->
+
+    <!-- SLIDE 9: Os Datasets Utilizados -->
+    <div class="slide-container" id="slide9">
+        <h2 class="slide-title">Os Datasets de Benchmark</h2>
         <div class="content-area">
-            <div class="info-card" style="max-width: 800px; text-align: center;">
-                <ul style="margin-bottom: 40px;">
-                    <li>Spark MLlib é viável para datasets de escala 100M+.</li>
-                    <li>Gradient-Boosted Trees é o modelo vencedor em precisão (Area Under the Curve 0.97).</li>
-                    <li>O "Shuffle" de rede continua sendo o maior custo distribuído.</li>
+            <div class="info-card" style="max-width: 1000px;">
+                <p style="margin-bottom: 20px; font-size: 18px; text-align: left;">Foram selecionados 3 datasets com características complexas distintas:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Tamanho (Registros)</th>
+                            <th>Características Foco</th>
+                            <th>Tarefa / Métrica Alvo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--chart-blue);">NYC Taxi Trip Duration</td>
+                            <td>~ 100.000.000</td>
+                            <td>Série Temporal (Longitudinais, Geolocalização)</td>
+                            <td>Regressão (RMSE / MAE)</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--chart-red);">Netflix Prize</td>
+                            <td>100.000.000 (17k filmes, 480k usuários)</td>
+                            <td>Matriz Esparsa (Sistemas de Recomendação)</td>
+                            <td>Regressão (RMSE / MAE)</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--chart-green);">Higgs Boson</td>
+                            <td>~ 11.000.000</td>
+                            <td>Desbalanceamento Severo (35% Positivo vs 65% Negativo)</td>
+                            <td>Classificação (AUC / F1-Score)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 9 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 10: Modelos Baseados em Árvores (RF & GBT) -->
+    <div class="slide-container" id="slide10">
+        <h2 class="slide-title">Modelos Baseados em Árvores</h2>
+        <div class="content-area">
+            <div class="two-column" style="align-items: flex-start;">
+                <div class="info-card">
+                    <p style="color: var(--chart-green); font-weight: 700; margin-bottom: 15px; font-size: 20px;">Random Forest (RF)</p>
+                    <ul style="padding-left: 20px; font-size: 16px;">
+                        <li><strong>Metodologia:</strong> Cria múltiplas árvores de decisão de forma independente (via bootstrap/bagging) e tira a média (ou votação) no final.</li>
+                        <li><strong>No Spark:</strong> Facilmente paralelizável. Cada worker pode treinar um subconjunto de árvores quase sem comunicação de rede.</li>
+                        <li><strong>Vantagem:</strong> Excelente prevenção de overfitting.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <p style="color: var(--chart-red); font-weight: 700; margin-bottom: 15px; font-size: 20px;">Gradient-Boosted Trees (GBT)</p>
+                    <ul style="padding-left: 20px; font-size: 16px;">
+                        <li><strong>Metodologia:</strong> Iterativo e sequencial. Cada nova árvore é treinada para corrigir os erros residuais combinados de todas as árvores anteriores.</li>
+                        <li><strong>No Spark:</strong> Desafiador. Cada iteração obriga os nós a se comunicarem (network shuffle) para atualizar os resíduos globais.</li>
+                        <li><strong>Vantagem:</strong> Altíssima precisão.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 10 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 11: Modelos Lineares e Instâncias -->
+    <div class="slide-container" id="slide11">
+        <h2 class="slide-title">Modelos Lineares e de Instância</h2>
+        <div class="content-area">
+            <div class="info-card" style="max-width: 1000px;">
+                <div style="display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left;">
+                    <div style="padding-bottom: 15px; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--chart-blue); font-weight: bold; font-size: 18px;">Regressão Linear (LinR) e Logística (LR):</span>
+                        <p style="margin-top: 5px; font-size: 16px; color: var(--text-dim);">Calculam equações e hiperplanos simples. São extremente rápidos e escalam perfeitamente na arquitetura Spark. Excelente "baseline" ou para cenários de tempo real (latência baixíssima).</p>
+                    </div>
+                    
+                    <div style="padding-bottom: 15px; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--chart-yellow); font-weight: bold; font-size: 18px;">Support Vector Machines (SVM / SVR):</span>
+                        <p style="margin-top: 5px; font-size: 16px; color: var(--text-dim);">Tentam maximizar a margem entre classes ou erros. Com kernel linear no Spark, oferecem um bom meio-termo entre recursos exigidos e precisão preditiva, mas sofrem computacionalmente com o aumento do volume de dados.</p>
+                    </div>
+
+                    <div>
+                        <span style="color: var(--chart-red); font-weight: bold; font-size: 18px;">K-Nearest Neighbors (KNN) - O Vilão:</span>
+                        <p style="margin-top: 5px; font-size: 16px; color: var(--text-dim);">Como não há "treinamento" real (apenas armazenamento), a fase de <em>predição</em> é trágica em ambientes distribuídos. Para inferir um ponto, ele calcula a distância contra os 100 milhões de registros existentes na memória, causando estouro de RAM e extrema lentidão de inferência.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 11 / 17</span>
+        </div>
+    </div>
+
+
+    <!-- BLOCO 4: AVALIAÇÃO (5 Slides) -->
+
+    <!-- SLIDE 12: Escalabilidade e Tempo de Treinamento -->
+    <div class="slide-container" id="slide12">
+        <h2 class="slide-title">Escalabilidade: Tempo de Treinamento</h2>
+        <div class="content-area">
+            <div class="info-card" style="width: 1000px; height: 500px;">
+                <p style="text-align: center; margin-bottom: 10px; font-weight: bold;">Dataset: NYC Taxi Trip (em Minutos)</p>
+                <div class="chart-container">
+                    <canvas id="chartEscalabilidade"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 12 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 13: Performance de Regressão -->
+    <div class="slide-container" id="slide13">
+        <h2 class="slide-title">Performance Preditiva: Regressão</h2>
+        <div class="content-area">
+            <div class="info-card" style="width: 1000px; height: 500px;">
+                <p style="text-align: center; margin-bottom: 10px; font-weight: bold;">Root Mean Squared Error (RMSE) a 100% de Escala (Menor é Melhor)</p>
+                <div class="chart-container">
+                    <canvas id="chartRegressao"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 13 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 14: Performance de Classificação (Higgs) -->
+    <div class="slide-container" id="slide14">
+        <h2 class="slide-title">Performance Preditiva: Classificação</h2>
+        <div class="content-area">
+            <div class="info-card" style="width: 1000px; height: 500px;">
+                <p style="text-align: center; margin-bottom: 10px; font-weight: bold;">Dataset: Higgs Boson (Area Under Curve - Maior é Melhor)</p>
+                <div class="chart-container">
+                    <canvas id="chartClassificacao"></canvas>
+                </div>
+                <p style="margin-top: 10px; text-align: center; font-size: 14px; color: var(--text-dim);">Modelos baseados em árvores (GBT/RF) lidam perfeitamente com o forte desbalanceamento natural da física de partículas.</p>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 14 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 15: Análise de Custo: Uso de CPU -->
+    <div class="slide-container" id="slide15">
+        <h2 class="slide-title">Análise de Custo: Uso de CPU</h2>
+        <div class="content-area">
+            <div class="info-card" style="width: 1000px; height: 500px;">
+                <p style="text-align: center; margin-bottom: 10px; font-weight: bold;">Consumo Máximo de CPU (%) em 100% da Escala</p>
+                <div class="chart-container">
+                    <canvas id="chartCPU"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 15 / 17</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 16: Análise de Custo: Uso de RAM -->
+    <div class="slide-container" id="slide16">
+        <h2 class="slide-title">Análise de Custo: Uso de RAM</h2>
+        <div class="content-area">
+            <div class="info-card" style="width: 1000px; height: 500px;">
+                <p style="text-align: center; margin-bottom: 10px; font-weight: bold;">Consumo Máximo de Memória RAM (%) na Fase de Predição</p>
+                <div class="chart-container">
+                    <canvas id="chartRAM"></canvas>
+                </div>
+                <p style="margin-top: 10px; text-align: center; font-size: 14px; color: var(--chart-red);">Note a ineficiência brutal do KNN (60% RAM) para inferência em escala distribuída.</p>
+            </div>
+        </div>
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 16 / 17</span>
+        </div>
+    </div>
+
+    <!-- BLOCO 5: CONCLUSÃO (1 Slide) -->
+
+    <!-- SLIDE 17: CONCLUSÃO -->
+    <div class="slide-container" id="slide17">
+        <h2 class="slide-title">Insights Finais & Conclusões</h2>
+        <div class="content-area">
+            <div class="info-card" style="max-width: 900px; text-align: left;">
+                <ul style="margin-bottom: 30px; font-size: 18px; line-height: 1.8;">
+                    <li><strong>A Viabilidade do Spark:</strong> Todos os modelos avaliados demonstraram crescimento computacional perfeitamente <strong>linear</strong> à medida que o tamanho dos dados escalou, validando a arquitetura in-memory.</li>
+                    <li><strong>Trade-off Primário:</strong> 
+                        <ul style="margin-top: 5px;">
+                            <li>Aplicações que demandam <em>Baixa Latência / Tempo Real / Baixo Orçamento</em>: Optar por <strong>Linear / Logistic Regression</strong>.</li>
+                            <li>Aplicações de <em>Missão Crítica</em> (Ciência, Detecção Severa) com Infraestrutura farta: O <strong>Gradient-Boosted Trees (GBT)</strong> justifica seu alto custo computacional entregando precisões superiores a AUC 0.97.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Cuidado Arquitetural:</strong> Algoritmos dependentes de instâncias locais ou de distância euclidiana exata contra todo o banco (como <strong>KNN</strong>) enfrentam sérios gargalos de rede (Shuffle) e não são indicados para o Spark MLlib nativo em escalas de 100M+ dados.</li>
                 </ul>
-                <div style="border-top: 1px solid var(--border); padding-top: 30px;">
-                    <p style="font-size: 24px; color: #fff;">Dúvidas ou Comentários?</p>
-                    <p style="color: var(--accent); font-weight: 700; font-size: 20px;">Juan Nascimento</p>
+                <div style="border-top: 1px solid var(--border); padding-top: 20px; text-align: center;">
+                    <p style="font-size: 28px; color: #fff; font-family: 'Crimson Pro', serif; font-weight: 700;">Obrigado!</p>
+                    <p style="color: var(--accent); font-weight: 700; font-size: 18px;">Juan Nascimento | IC Unicamp</p>
                     <p style="font-size: 14px; color: var(--text-dim);">juan.nascimento@ic.unicamp.br</p>
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | 9 Abr 2026</span>
-            <span>Slide 11 / 11</span>
+            <span class="slide-counter">Slide 17 / 17</span>
         </div>
     </div>
 
+    <!-- SCRIPTS DE NAVEGAÇÃO E GRÁFICOS (CHART.JS) -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            
+            // --- LÓGICA DE NAVEGAÇÃO ---
             const slides = document.querySelectorAll('.slide-container');
             let currentSlide = 0;
 
-            // Função principal para trocar slides
             function goToSlide(index) {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = index;
                 slides[currentSlide].classList.add('active');
+                
+
+
+                // Força os gráficos a renderizarem corretamente se o slide os contiver
+                window.dispatchEvent(new Event('resize')); 
+                if (window.myDiagramGoJS) {
+                    window.myDiagramGoJS.requestUpdate();
+                }
             }
 
-            // Navegação pelo teclado
             document.addEventListener('keydown', function (event) {
                 if (event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
                     if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
@@ -822,24 +745,300 @@
                 }
             });
 
-            // Navegação por clique na tela (Direita = Avança, Esquerda = Volta)
             document.addEventListener('click', function (event) {
                 const clickX = event.clientX;
                 const windowWidth = window.innerWidth;
 
-                // Ignora cliques que sejam em textos selecionáveis para não atrapalhar
-                if (window.getSelection().toString().length > 0) return;
+                if (window.getSelection().toString().length > 0) return; // Ignora se estiver selecionando texto
 
-                if (clickX > windowWidth * 0.6) {
-                    // Clique nos 40% da direita da tela
+                if (clickX > windowWidth * 0.7) {
                     if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
-                } else if (clickX < windowWidth * 0.4) {
-                    // Clique nos 40% da esquerda da tela
+                } else if (clickX < windowWidth * 0.3) {
                     if (currentSlide > 0) goToSlide(currentSlide - 1);
                 }
             });
+
+            // --- LÓGICA DO CHART.JS ---
+            Chart.defaults.color = '#8b949e';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            // 1. Gráfico de Escalabilidade (Tempo de Treinamento - Slide 12)
+            const ctxEscala = document.getElementById('chartEscalabilidade');
+            if (ctxEscala) {
+                new Chart(ctxEscala, {
+                    type: 'bar',
+                    data: {
+                        labels: ['10% Dataset', '50% Dataset', '100% Dataset'],
+                        datasets: [
+                            {
+                                label: 'Linear Regression (Rápido)',
+                                data: [4.5, 13.5, 25.5],
+                                backgroundColor: '#3fb950'
+                            },
+                            {
+                                label: 'Random Forest (Médio)',
+                                data: [13.0, 40.0, 70.0],
+                                backgroundColor: '#58a6ff'
+                            },
+                            {
+                                label: 'Gradient-Boosted Trees (Lento)',
+                                data: [18.5, 47.0, 84.5],
+                                backgroundColor: '#f85149'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { y: { title: { display: true, text: 'Tempo (Minutos)' } } }
+                    }
+                });
+            }
+
+            // 2. Gráfico de Regressão RMSE (Slide 13)
+            const ctxReg = document.getElementById('chartRegressao');
+            if (ctxReg) {
+                new Chart(ctxReg, {
+                    type: 'bar',
+                    data: {
+                        labels: ['LinR (Menos Eficaz)', 'RF (Bom)', 'GBT (Melhor)'],
+                        datasets: [
+                            {
+                                label: 'NYC Taxi (Escala alta - RMSE 5.6 a 8.1)',
+                                data: [8.1, 5.8, 5.6],
+                                backgroundColor: ['rgba(63, 185, 80, 0.4)', 'rgba(88, 166, 255, 0.4)', 'rgba(248, 81, 73, 0.4)'],
+                                borderColor: ['#3fb950', '#58a6ff', '#f85149'],
+                                borderWidth: 2
+                            },
+                            {
+                                label: 'Netflix Prize (Escala Baixa - RMSE 0.95 a 1.18)',
+                                data: [1.18, 1.05, 0.95],
+                                backgroundColor: ['#3fb950', '#58a6ff', '#f85149']
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    }
+                });
+            }
+
+            // 3. Gráfico de Classificação AUC (Slide 14)
+            const ctxClass = document.getElementById('chartClassificacao');
+            if (ctxClass) {
+                new Chart(ctxClass, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Logistic Regression', 'Support Vector Machines', 'Random Forest', 'Gradient-Boosted Trees'],
+                        datasets: [{
+                            label: 'AUC (Area Under Curve)',
+                            data: [0.94, 0.95, 0.96, 0.97],
+                            backgroundColor: ['#3fb950', '#e3b341', '#58a6ff', '#f85149'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { min: 0.90, max: 1.0 } }, // Ajuste o eixo Y para dar destaque visual as diferenças
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // 4. Gráfico CPU (Slide 15)
+            const ctxCpu = document.getElementById('chartCPU');
+            if (ctxCpu) {
+                new Chart(ctxCpu, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Linear/Logistic Reg.', 'KNN', 'Random Forest', 'Gradient-Boosted Trees'],
+                        datasets: [{
+                            label: 'Pico de Uso de CPU (%) em Treinamento',
+                            data: [50, 70, 75, 80],
+                            backgroundColor: ['#3fb950', '#bc8cff', '#58a6ff', '#f85149']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Grafico de barra horizontal
+                        scales: { x: { max: 100 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // 5. Gráfico RAM (Slide 16)
+            const ctxRam = document.getElementById('chartRAM');
+            if (ctxRam) {
+                new Chart(ctxRam, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Linear/Logistic Reg.', 'Support Vector Mach.', 'Random Forest', 'Gradient-Boosted Trees', 'K-Nearest Neighbors'],
+                        datasets: [{
+                            label: 'Pico de Uso de RAM (%) na Predição',
+                            data: [40, 45, 55, 65, 60],
+                            backgroundColor: ['#3fb950', '#e3b341', '#58a6ff', '#f85149', '#bc8cff']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: { x: { max: 100 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+        });
+    </script>
+
+
+
+    
+        <!-- GoJS Diagram Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!window.go) {
+                console.error("GoJS not loaded!");
+                return;
+            }
+            
+            const $ = go.GraphObject.make;
+            
+            const myDiagram = $(go.Diagram, "clusterDiagram", {
+                "undoManager.isEnabled": true,
+                "autoScale": go.Diagram.Uniform,
+                layout: $(go.LayeredDigraphLayout, { 
+                    direction: 90, 
+                    layerSpacing: 40, 
+                    columnSpacing: 30 
+                }),
+            });
+
+            const textColor = "#e6edf3";
+            const strokeColor = "#58a6ff";
+            const nodeBgColor = "#161b22";
+
+            const icons = {
+                "Cloud": "M 44.2 3.1 C 40 3.1 36.3 5.4 34.3 9.1 C 32 6.6 28.9 5.1 25.5 5.1 C 18.2 5.1 12.3 11 12.3 18.3 C 12.3 18.6 12.3 18.9 12.3 19.2 C 5.3 20.3 0 26.5 0 33.7 C 0 41.5 6.3 47.9 14.1 47.9 L 44.2 47.9 C 53.6 47.9 61.2 40.3 61.2 30.9 C 61.2 21.6 53.6 14 44.2 14 C 44.2 13.9 44.2 13.7 44.2 13.5 C 44.2 7.8 39.5 3.1 44.2 3.1 Z",
+                "Firewall": "M0 0 L50 0 L50 50 L0 50 Z M5 5 L20 5 L20 15 L5 15 Z M25 5 L45 5 L45 15 L25 15 Z M5 20 L15 20 L15 30 L5 30 Z M20 20 L45 20 L45 30 L20 30 Z M5 35 L25 35 L25 45 L5 45 Z M30 35 L45 35 L45 45 L30 45 Z",
+                "Router": "M25 0 C11.2 0 0 11.2 0 25 C0 38.8 11.2 50 25 50 C38.8 50 50 38.8 50 25 C50 11.2 38.8 0 25 0 Z M25 5 C36.1 5 45 14 45 25 C45 36.1 36.1 45 25 45 C13.9 45 5 36.1 5 25 C5 14 13.9 5 25 5 Z M15 20 L25 10 L35 20 Z M15 30 L25 40 L35 30 Z M10 25 L20 15 L20 35 Z M40 25 L30 15 L30 35 Z",
+                "Switch": "M0 15 L50 15 L50 35 L0 35 Z M5 20 L15 20 L15 25 L5 25 Z M20 20 L30 20 L30 25 L20 25 Z M35 20 L45 20 L45 25 L35 25 Z M5 28 L15 28 L15 33 L5 33 Z M20 28 L30 28 L30 33 L20 33 Z M35 28 L45 28 L45 33 L35 33 Z",
+                "Server": "M5 0 L25 0 C27.8 0 30 2.2 30 5 L30 45 C30 47.8 27.8 50 25 50 L5 50 C2.2 50 0 47.8 0 45 L0 5 C0 2.2 2.2 0 5 0 Z M5 5 L25 5 L25 15 L5 15 Z M5 20 L25 20 L25 30 L5 30 Z M5 35 L25 35 L25 45 L5 45 Z",
+                "PC": "M0 5 L40 5 L40 30 L0 30 Z M15 30 L15 40 L25 40 L25 30 Z M5 40 L35 40 L35 45 L5 45 Z",
+                "Database": "M25 0 C11.2 0 0 4.5 0 10 L0 40 C0 45.5 11.2 50 25 50 C38.8 50 50 45.5 50 40 L50 10 C50 4.5 38.8 0 25 0 Z M25 15 C13.9 15 5 11.6 5 10 C5 8.4 13.9 5 25 5 C36.1 5 45 8.4 45 10 C45 11.6 36.1 15 25 15 Z M25 30 C13.9 30 5 26.6 5 25 C5 23.4 13.9 20 25 20 C36.1 20 45 23.4 45 25 C45 26.6 36.1 30 25 30 Z"
+            };
+
+            function geoFunc(type) {
+                return icons[type] || icons["Server"];
+            }
+
+            myDiagram.nodeTemplate =
+                $(go.Node, "Vertical",
+                    { locationSpot: go.Spot.Center },
+                    $(go.Panel, "Auto",
+                        $(go.Shape, "Circle",
+                            { fill: nodeBgColor, stroke: strokeColor, strokeWidth: 2, width: 60, height: 60 }),
+                        $(go.Shape,
+                            { margin: 10, fill: strokeColor, strokeWidth: 0 },
+                            new go.Binding("geometryString", "type", geoFunc))
+                    ),
+                    $(go.TextBlock,
+                        { margin: 5, font: "bold 14px 'Inter', sans-serif", stroke: textColor, textAlign: "center" },
+                        new go.Binding("text", "text"))
+                );
+
+            myDiagram.linkTemplate =
+                $(go.Link,
+                    { routing: go.Link.AvoidsNodes, corner: 10, curve: go.Link.JumpOver },
+                    $(go.Shape, { strokeWidth: 2, stroke: strokeColor }),
+                    $(go.Shape, { toArrow: "Standard", fill: strokeColor, stroke: null })
+                );
+
+            myDiagram.groupTemplate =
+                $(go.Group, "Vertical",
+                    { layout: $(go.LayeredDigraphLayout, { direction: 0, columnSpacing: 10 }) },
+                    $(go.Panel, "Auto",
+                        $(go.Shape, "RoundedRectangle",
+                            { fill: "rgba(88, 166, 255, 0.05)", stroke: "#58a6ff", strokeWidth: 2, strokeDashArray: [5, 5] }),
+                        $(go.Placeholder, { padding: 20 })
+                    ),
+                    $(go.TextBlock,
+                        { alignment: go.Spot.Top, font: "bold 18px 'Inter', sans-serif", stroke: "#e6edf3", margin: new go.Margin(-20, 0, 0, 0) },
+                        new go.Binding("text", "text")
+                    )
+                );
+
+            const nodeDataArray = [
+                { key: 0, type: "Cloud", text: "Internet / External" },
+                { key: 1, type: "Firewall", text: "Firewall" },
+                { key: 2, type: "Router", text: "Main Router" },
+                { key: 3, type: "Server", text: "YARN (Master Node)
+Apache Spark 3.0.1" },
+                
+                { key: 4, type: "Switch", text: "Top of Rack Switch" },
+                
+                { key: 10, isGroup: true, text: "Worker Nodes (64 Cores / 512GB RAM)" },
+                { key: 11, type: "Server", text: "Node 1
+(64GB)", group: 10 },
+                { key: 12, type: "Server", text: "Node 2
+(64GB)", group: 10 },
+                { key: 13, type: "Server", text: "Node 3
+(64GB)", group: 10 },
+                { key: 14, type: "Server", text: "Node 4
+(64GB)", group: 10 },
+                { key: 15, type: "Server", text: "Node 5
+(64GB)", group: 10 },
+                { key: 16, type: "Server", text: "Node 6
+(64GB)", group: 10 },
+                { key: 17, type: "Server", text: "Node 7
+(64GB)", group: 10 },
+                { key: 18, type: "Server", text: "Node 8
+(64GB)", group: 10 },
+
+                { key: 20, type: "Switch", text: "Storage Switch" },
+                { key: 21, type: "Database", text: "HDFS Storage
+(Armazenamento Distribuído)" }
+            ];
+
+            const linkDataArray = [
+                { from: 0, to: 1 },
+                { from: 1, to: 2 },
+                { from: 2, to: 3 },
+                { from: 3, to: 4 },
+                
+                { from: 4, to: 11 },
+                { from: 4, to: 12 },
+                { from: 4, to: 13 },
+                { from: 4, to: 14 },
+                { from: 4, to: 15 },
+                { from: 4, to: 16 },
+                { from: 4, to: 17 },
+                { from: 4, to: 18 },
+                
+                { from: 11, to: 20 },
+                { from: 12, to: 20 },
+                { from: 13, to: 20 },
+                { from: 14, to: 20 },
+                { from: 15, to: 20 },
+                { from: 16, to: 20 },
+                { from: 17, to: 20 },
+                { from: 18, to: 20 },
+
+                { from: 20, to: 21 }
+            ];
+
+            myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+            window.myDiagramGoJS = myDiagram;
+            setTimeout(() => { myDiagram.requestUpdate(); }, 100); // Ensure initial render
         });
     </script>
 </body>
+</html>
+
 
 </html>
