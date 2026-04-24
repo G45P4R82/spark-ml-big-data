@@ -478,11 +478,24 @@
 
     <!-- SLIDE 8: Setup Experimental (O Cluster) -->
     <div class="slide-container" id="slide8">
-        <h2 class="slide-title">Setup Experimental: Arquitetura do Cluster</h2>
-        <div class="content-area" style="width: 100%; height: 100%;">
-            <div class="info-card" style="background: var(--bg-main); border: 1px solid var(--border); padding: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                <!-- GoJS Container taking full space -->
-                <div id="clusterDiagram" style="width: 100%; height: 500px; background: transparent; display: block;"></div>
+        <h2 class="slide-title">Setup Experimental: A Infraestrutura</h2>
+        <div class="content-area">
+            <div class="two-column" style="grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: stretch;">
+                <div class="info-card" style="justify-content: center; padding: 30px;">
+                    <p style="color: var(--accent); font-weight: 700; margin-bottom: 15px; font-size: 22px;"><i class="fa-solid fa-server"></i> Especificações</p>
+                    <ul style="padding-left: 20px; margin: 0; line-height: 1.8; font-size: 16px;">
+                        <li><strong>Framework:</strong> Apache Spark 3.0.1</li>
+                        <li><strong>Cluster:</strong> 8 Nodos (1 Master, 8 Workers)</li>
+                        <li><strong>Processamento:</strong> 64 Cores (8 cores/nodo)</li>
+                        <li><strong>Memória RAM:</strong> 512 GB (64 GB/nodo). Essencial para processamento <em>In-Memory</em>.</li>
+                        <li><strong>Armazenamento:</strong> HDFS Distribuído</li>
+                        <li><strong>Gerenciador:</strong> YARN</li>
+                    </ul>
+                </div>
+                <div class="info-card" style="background: var(--bg-main); border: 1px solid var(--border); padding: 10px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                    <!-- Arquitetura Oficial do Spark -->
+                    <img src="spark_cluster.png" alt="Apache Spark Cluster Architecture" style="max-width: 100%; max-height: 450px; object-fit: contain; border-radius: 8px;">
+                </div>
             </div>
         </div>
         <div class="academic-footer">
@@ -899,142 +912,93 @@
 
 
     
-        <!-- GoJS Diagram Logic -->
+        
+    <!-- GoJS Diagram Logic Simplificada -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            if (!window.go) {
-                console.error("GoJS not loaded!");
-                return;
-            }
+            if (!window.go) return;
             
             const $ = go.GraphObject.make;
             
             const myDiagram = $(go.Diagram, "clusterDiagram", {
                 "undoManager.isEnabled": true,
                 "autoScale": go.Diagram.Uniform,
-                layout: $(go.LayeredDigraphLayout, { 
-                    direction: 90, 
-                    layerSpacing: 40, 
-                    columnSpacing: 30 
-                }),
+                layout: $(go.LayeredDigraphLayout, { direction: 90, layerSpacing: 40 })
             });
 
-            const textColor = "#e6edf3";
-            const strokeColor = "#58a6ff";
-            const nodeBgColor = "#161b22";
-
-            const icons = {
-                "Cloud": "M 44.2 3.1 C 40 3.1 36.3 5.4 34.3 9.1 C 32 6.6 28.9 5.1 25.5 5.1 C 18.2 5.1 12.3 11 12.3 18.3 C 12.3 18.6 12.3 18.9 12.3 19.2 C 5.3 20.3 0 26.5 0 33.7 C 0 41.5 6.3 47.9 14.1 47.9 L 44.2 47.9 C 53.6 47.9 61.2 40.3 61.2 30.9 C 61.2 21.6 53.6 14 44.2 14 C 44.2 13.9 44.2 13.7 44.2 13.5 C 44.2 7.8 39.5 3.1 44.2 3.1 Z",
-                "Firewall": "M0 0 L50 0 L50 50 L0 50 Z M5 5 L20 5 L20 15 L5 15 Z M25 5 L45 5 L45 15 L25 15 Z M5 20 L15 20 L15 30 L5 30 Z M20 20 L45 20 L45 30 L20 30 Z M5 35 L25 35 L25 45 L5 45 Z M30 35 L45 35 L45 45 L30 45 Z",
-                "Router": "M25 0 C11.2 0 0 11.2 0 25 C0 38.8 11.2 50 25 50 C38.8 50 50 38.8 50 25 C50 11.2 38.8 0 25 0 Z M25 5 C36.1 5 45 14 45 25 C45 36.1 36.1 45 25 45 C13.9 45 5 36.1 5 25 C5 14 13.9 5 25 5 Z M15 20 L25 10 L35 20 Z M15 30 L25 40 L35 30 Z M10 25 L20 15 L20 35 Z M40 25 L30 15 L30 35 Z",
-                "Switch": "M0 15 L50 15 L50 35 L0 35 Z M5 20 L15 20 L15 25 L5 25 Z M20 20 L30 20 L30 25 L20 25 Z M35 20 L45 20 L45 25 L35 25 Z M5 28 L15 28 L15 33 L5 33 Z M20 28 L30 28 L30 33 L20 33 Z M35 28 L45 28 L45 33 L35 33 Z",
-                "Server": "M5 0 L25 0 C27.8 0 30 2.2 30 5 L30 45 C30 47.8 27.8 50 25 50 L5 50 C2.2 50 0 47.8 0 45 L0 5 C0 2.2 2.2 0 5 0 Z M5 5 L25 5 L25 15 L5 15 Z M5 20 L25 20 L25 30 L5 30 Z M5 35 L25 35 L25 45 L5 45 Z",
-                "PC": "M0 5 L40 5 L40 30 L0 30 Z M15 30 L15 40 L25 40 L25 30 Z M5 40 L35 40 L35 45 L5 45 Z",
-                "Database": "M25 0 C11.2 0 0 4.5 0 10 L0 40 C0 45.5 11.2 50 25 50 C38.8 50 50 45.5 50 40 L50 10 C50 4.5 38.8 0 25 0 Z M25 15 C13.9 15 5 11.6 5 10 C5 8.4 13.9 5 25 5 C36.1 5 45 8.4 45 10 C45 11.6 36.1 15 25 15 Z M25 30 C13.9 30 5 26.6 5 25 C5 23.4 13.9 20 25 20 C36.1 20 45 23.4 45 25 C45 26.6 36.1 30 25 30 Z"
-            };
-
-            function geoFunc(type) {
-                return icons[type] || icons["Server"];
-            }
+            // Cores
+            const masterColor = "#f85149";
+            const workerColor = "#58a6ff";
+            const storageColor = "#3fb950";
+            const switchColor = "#e3b341";
+            const routerColor = "#bc8cff";
 
             myDiagram.nodeTemplate =
-                $(go.Node, "Vertical",
-                    { locationSpot: go.Spot.Center },
-                    $(go.Panel, "Auto",
-                        $(go.Shape, "Circle",
-                            { fill: nodeBgColor, stroke: strokeColor, strokeWidth: 2, width: 60, height: 60 }),
-                        $(go.Shape,
-                            { margin: 10, fill: strokeColor, strokeWidth: 0 },
-                            new go.Binding("geometryString", "type", geoFunc))
-                    ),
-                    $(go.TextBlock,
-                        { margin: 5, font: "bold 14px 'Inter', sans-serif", stroke: textColor, textAlign: "center" },
-                        new go.Binding("text", "text"))
+                $(go.Node, "Auto",
+                    $(go.Shape, "RoundedRectangle", { fill: "#0d1117", strokeWidth: 2 },
+                        new go.Binding("stroke", "color")),
+                    $(go.Panel, "Vertical",
+                        { margin: 10 },
+                        $(go.TextBlock, { font: "bold 14px 'Inter', sans-serif", stroke: "#e6edf3", margin: 4 },
+                            new go.Binding("text", "type")),
+                        $(go.TextBlock, { font: "12px 'Inter', sans-serif", stroke: "#8b949e", margin: 2, textAlign: "center" },
+                            new go.Binding("text", "desc"))
+                    )
                 );
 
             myDiagram.linkTemplate =
                 $(go.Link,
-                    { routing: go.Link.AvoidsNodes, corner: 10, curve: go.Link.JumpOver },
-                    $(go.Shape, { strokeWidth: 2, stroke: strokeColor }),
-                    $(go.Shape, { toArrow: "Standard", fill: strokeColor, stroke: null })
+                    { routing: go.Link.AvoidsNodes, corner: 10 },
+                    $(go.Shape, { strokeWidth: 2, stroke: "#8b949e" }),
+                    $(go.Shape, { toArrow: "Standard", fill: "#8b949e", stroke: null })
                 );
 
             myDiagram.groupTemplate =
                 $(go.Group, "Vertical",
-                    { layout: $(go.LayeredDigraphLayout, { direction: 0, columnSpacing: 10 }) },
                     $(go.Panel, "Auto",
                         $(go.Shape, "RoundedRectangle",
                             { fill: "rgba(88, 166, 255, 0.05)", stroke: "#58a6ff", strokeWidth: 2, strokeDashArray: [5, 5] }),
                         $(go.Placeholder, { padding: 20 })
                     ),
                     $(go.TextBlock,
-                        { alignment: go.Spot.Top, font: "bold 18px 'Inter', sans-serif", stroke: "#e6edf3", margin: new go.Margin(-20, 0, 0, 0) },
+                        { alignment: go.Spot.Top, font: "bold 16px 'Inter', sans-serif", stroke: "#58a6ff", margin: new go.Margin(-15, 0, 0, 0) },
                         new go.Binding("text", "text")
                     )
                 );
 
-            const nodeDataArray = [
-                { key: 0, type: "Cloud", text: "Internet / External" },
-                { key: 1, type: "Firewall", text: "Firewall" },
-                { key: 2, type: "Router", text: "Main Router" },
-                { key: 3, type: "Server", text: "YARN (Master Node)
-Apache Spark 3.0.1" },
-                
-                { key: 4, type: "Switch", text: "Top of Rack Switch" },
-                
-                { key: 10, isGroup: true, text: "Worker Nodes (64 Cores / 512GB RAM)" },
-                { key: 11, type: "Server", text: "Node 1
-(64GB)", group: 10 },
-                { key: 12, type: "Server", text: "Node 2
-(64GB)", group: 10 },
-                { key: 13, type: "Server", text: "Node 3
-(64GB)", group: 10 },
-                { key: 14, type: "Server", text: "Node 4
-(64GB)", group: 10 },
-                { key: 15, type: "Server", text: "Node 5
-(64GB)", group: 10 },
-                { key: 16, type: "Server", text: "Node 6
-(64GB)", group: 10 },
-                { key: 17, type: "Server", text: "Node 7
-(64GB)", group: 10 },
-                { key: 18, type: "Server", text: "Node 8
-(64GB)", group: 10 },
+                                    // Baseado em topologia Estrela Direta (Master -> Workers -> Storage HDFS)
+            myDiagram.model = new go.GraphLinksModel(
+                [
+                    { key: 3, type: "Master Node", desc: "YARN (Spark 3.0.1)", color: masterColor },
+                    
+                    // Group Intranet
+                    { key: 10, isGroup: true, text: "Worker Nodes & Armazenamento" },
+                    { key: 11, type: "Server", desc: "Node 1", color: workerColor, group: 10 },
+                    { key: 12, type: "Server", desc: "Node 2", color: workerColor, group: 10 },
+                    { key: 13, type: "Server", desc: "Node 3", color: workerColor, group: 10 },
+                    { key: 14, type: "Server", desc: "Node 4", color: workerColor, group: 10 },
+                    { key: 15, type: "Server", desc: "Node 5", color: workerColor, group: 10 },
+                    { key: 16, type: "Server", desc: "Node 6", color: workerColor, group: 10 },
+                    { key: 17, type: "Server", desc: "Node 7", color: workerColor, group: 10 },
+                    { key: 18, type: "Server", desc: "Node 8", color: workerColor, group: 10 },
+                    
+                    // Colocando o Database DENTRO do grupo dos workers
+                    { key: 21, type: "Database", desc: "HDFS Distribuído", color: storageColor, group: 10 }
+                ],
+                [
+                    // Master ligando direto nos workers (sem switch)
+                    { from: 3, to: 11 }, { from: 3, to: 12 }, { from: 3, to: 13 }, { from: 3, to: 14 },
+                    { from: 3, to: 15 }, { from: 3, to: 16 }, { from: 3, to: 17 }, { from: 3, to: 18 },
+                    
+                    // Workers ligando direto no HDFS (sem switch)
+                    { from: 11, to: 21 }, { from: 12, to: 21 }, { from: 13, to: 21 }, { from: 14, to: 21 },
+                    { from: 15, to: 21 }, { from: 16, to: 21 }, { from: 17, to: 21 }, { from: 18, to: 21 }
+                ]
+            );
 
-                { key: 20, type: "Switch", text: "Storage Switch" },
-                { key: 21, type: "Database", text: "HDFS Storage
-(Armazenamento Distribuído)" }
-            ];
-
-            const linkDataArray = [
-                { from: 0, to: 1 },
-                { from: 1, to: 2 },
-                { from: 2, to: 3 },
-                { from: 3, to: 4 },
-                
-                { from: 4, to: 11 },
-                { from: 4, to: 12 },
-                { from: 4, to: 13 },
-                { from: 4, to: 14 },
-                { from: 4, to: 15 },
-                { from: 4, to: 16 },
-                { from: 4, to: 17 },
-                { from: 4, to: 18 },
-                
-                { from: 11, to: 20 },
-                { from: 12, to: 20 },
-                { from: 13, to: 20 },
-                { from: 14, to: 20 },
-                { from: 15, to: 20 },
-                { from: 16, to: 20 },
-                { from: 17, to: 20 },
-                { from: 18, to: 20 },
-
-                { from: 20, to: 21 }
-            ];
-
-            myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+            // Hook for slide changes
             window.myDiagramGoJS = myDiagram;
-            setTimeout(() => { myDiagram.requestUpdate(); }, 100); // Ensure initial render
+            setTimeout(() => myDiagram.requestUpdate(), 500);
         });
     </script>
 </body>
