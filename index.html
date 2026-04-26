@@ -280,6 +280,7 @@
         }
     </style>
     <script src="https://unpkg.com/gojs/release/go.js"></script>
+    <script type="module" src="https://unpkg.com/rough-notation?module"></script>
 </head>
 
 <body>
@@ -316,7 +317,7 @@
             laterais para navegar</div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 1 / 17</span>
+            <span class="slide-counter">Slide 1 / 18</span>
         </div>
     </div>
 
@@ -350,7 +351,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 2 / 17</span>
+            <span class="slide-counter">Slide 2 / 18</span>
         </div>
     </div>
 
@@ -376,7 +377,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 3 / 17</span>
+            <span class="slide-counter">Slide 3 / 18</span>
         </div>
     </div>
 
@@ -402,7 +403,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 4 / 17</span>
+            <span class="slide-counter">Slide 4 / 18</span>
         </div>
     </div>
 
@@ -431,7 +432,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 5 / 17</span>
+            <span class="slide-counter">Slide 5 / 18</span>
         </div>
     </div>
 
@@ -440,7 +441,7 @@
         <h2 class="slide-title">Workflow de ML no Spark</h2>
         <div class="content-area">
             <div class="info-card" style="align-items: center; background: #fff; width: 100%; max-width: 1100px; padding: 20px;">
-                <img src="figura1.png" alt="Workflow de ML no Spark" style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px;">
+                <img src="static/figura1.png" alt="Workflow de ML no Spark" style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 8px;">
             </div>
             <p style="margin-top: 20px; font-size: 16px; max-width: 900px; color: var(--text-dim);">
                 Toda essa arquitetura é executada em paralelo através de dezenas de "Executors" sobre o gerenciador de recursos YARN, processando enormes blocos de dados contíguos simultaneamente.
@@ -448,7 +449,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 6 / 17</span>
+            <span class="slide-counter">Slide 6 / 18</span>
         </div>
     </div>
 
@@ -472,7 +473,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 7 / 17</span>
+            <span class="slide-counter">Slide 7 / 18</span>
         </div>
     </div>
 
@@ -494,13 +495,13 @@
                 </div>
                 <div class="info-card" style="background: var(--bg-main); border: 1px solid var(--border); padding: 10px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
                     <!-- Arquitetura Oficial do Spark -->
-                    <img src="spark_cluster.png" alt="Apache Spark Cluster Architecture" style="max-width: 100%; max-height: 450px; object-fit: contain; border-radius: 8px;">
+                    <img src="static/spark_cluster.png" alt="Apache Spark Cluster Architecture" style="max-width: 100%; max-height: 450px; object-fit: contain; border-radius: 8px;">
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 8 / 17</span>
+            <span class="slide-counter">Slide 8 / 18</span>
         </div>
     </div>
 
@@ -546,7 +547,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 9 / 17</span>
+            <span class="slide-counter">Slide 9 / 18</span>
         </div>
     </div>
 
@@ -575,7 +576,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 10 / 17</span>
+            <span class="slide-counter">Slide 10 / 18</span>
         </div>
     </div>
 
@@ -604,7 +605,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 11 / 17</span>
+            <span class="slide-counter">Slide 11 / 18</span>
         </div>
     </div>
 
@@ -624,7 +625,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 12 / 17</span>
+            <span class="slide-counter">Slide 12 / 18</span>
         </div>
     </div>
 
@@ -632,16 +633,35 @@
     <div class="slide-container" id="slide13">
         <h2 class="slide-title">Performance Preditiva: Regressão</h2>
         <div class="content-area">
-            <div class="info-card" style="width: 1000px; height: 500px;">
-                <p style="text-align: center; margin-bottom: 10px; font-weight: bold;">Root Mean Squared Error (RMSE) a 100% de Escala (Menor é Melhor)</p>
-                <div class="chart-container">
-                    <canvas id="chartRegressao"></canvas>
+            <div class="two-column" style="grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: stretch;">
+                <div class="info-card" style="justify-content: center; padding: 30px;">
+                    <p style="color: var(--accent); font-weight: 700; margin-bottom: 15px; font-size: 22px;"><i class="fa-solid fa-chart-line"></i> Insights</p>
+                    <ul style="padding-left: 20px; margin: 0; line-height: 1.8; font-size: 16px;">
+                        <li><strong>O Menor Erro Vence:</strong> O Root Mean Squared Error (RMSE) mede o desvio padrão dos resíduos de predição.</li>
+                        <li style="margin-top: 15px;"><strong>A Força das Árvores:</strong> Gradient-Boosted Trees (GBT) domina os dois cenários, capturando relações não-lineares complexas que o LinR perde.</li>
+                        <li style="margin-top: 15px;"><strong>O Trade-off:</strong> A precisão extra do GBT custa até <strong>4x mais tempo</strong> e recursos de cluster do que o modelo linear.</li>
+                    </ul>
+                </div>
+                <div class="info-card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-around; align-items: center;">
+                    <p style="text-align: center; margin-bottom: 5px; font-weight: bold; font-size: 18px;">RMSE a 100% de Escala (Menor é Melhor)</p>
+                    <div style="width: 100%; height: 160px; margin-bottom: 15px;">
+                        <p style="text-align: center; margin: 0 0 5px 0; font-size: 14px; color: var(--chart-blue);">NYC Taxi Trip</p>
+                        <div class="chart-container" style="height: 130px; width: 100%;">
+                            <canvas id="chartRegressaoNYC"></canvas>
+                        </div>
+                    </div>
+                    <div style="width: 100%; height: 160px;">
+                        <p style="text-align: center; margin: 0 0 5px 0; font-size: 14px; color: var(--chart-red);">Netflix Prize</p>
+                        <div class="chart-container" style="height: 130px; width: 100%;">
+                            <canvas id="chartRegressaoNetflix"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 13 / 17</span>
+            <span class="slide-counter">Slide 13 / 18</span>
         </div>
     </div>
 
@@ -659,7 +679,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 14 / 17</span>
+            <span class="slide-counter">Slide 14 / 18</span>
         </div>
     </div>
 
@@ -676,7 +696,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 15 / 17</span>
+            <span class="slide-counter">Slide 15 / 18</span>
         </div>
     </div>
 
@@ -694,7 +714,7 @@
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | Juan Nascimento</span>
-            <span class="slide-counter">Slide 16 / 17</span>
+            <span class="slide-counter">Slide 16 / 18</span>
         </div>
     </div>
 
@@ -705,29 +725,60 @@
         <h2 class="slide-title">Insights Finais & Conclusões</h2>
         <div class="content-area">
             <div class="info-card" style="max-width: 900px; text-align: left;">
-                <ul style="margin-bottom: 30px; font-size: 18px; line-height: 1.8;">
+                <ul style="margin-bottom: 0; font-size: 17px; line-height: 1.6;">
                     <li><strong>A Viabilidade do Spark:</strong> Todos os modelos avaliados demonstraram crescimento computacional perfeitamente <strong>linear</strong> à medida que o tamanho dos dados escalou, validando a arquitetura in-memory.</li>
                     <li><strong>Trade-off Primário:</strong> 
                         <ul style="margin-top: 5px;">
-                            <li>Aplicações que demandam <em>Baixa Latência / Tempo Real / Baixo Orçamento</em>: Optar por <strong>Linear / Logistic Regression</strong>.</li>
-                            <li>Aplicações de <em>Missão Crítica</em> (Ciência, Detecção Severa) com Infraestrutura farta: O <strong>Gradient-Boosted Trees (GBT)</strong> justifica seu alto custo computacional entregando precisões superiores a AUC 0.97.</li>
+                            <li><span id='mark-green'>Aplicações que demandam <em>Baixa Latência / Tempo Real / Baixo Orçamento</em>: Optar por <strong>Linear / Logistic Regression</strong>.</span></li>
+                            <li><span id='mark-blue'>Aplicações de <em>Missão Crítica</em> (Ciência, Detecção Severa) com Infraestrutura farta: O <strong>Gradient-Boosted Trees (GBT)</strong></span> justifica seu alto custo computacional entregando precisões superiores a AUC 0.97.</li>
                         </ul>
                     </li>
                     <li><strong>Cuidado Arquitetural:</strong> Algoritmos dependentes de instâncias locais ou de distância euclidiana exata contra todo o banco (como <strong>KNN</strong>) enfrentam sérios gargalos de rede (Shuffle) e não são indicados para o Spark MLlib nativo em escalas de 100M+ dados.</li>
                 </ul>
-                <div style="border-top: 1px solid var(--border); padding-top: 20px; text-align: center;">
-                    <p style="font-size: 28px; color: #fff; font-family: 'Crimson Pro', serif; font-weight: 700;">Obrigado!</p>
-                    <p style="color: var(--accent); font-weight: 700; font-size: 18px;">Juan Nascimento | IC Unicamp</p>
-                    <p style="font-size: 14px; color: var(--text-dim);">juan.nascimento@ic.unicamp.br</p>
-                </div>
+
             </div>
         </div>
         <div class="academic-footer">
             <span>IC - Unicamp | 9 Abr 2026</span>
-            <span class="slide-counter">Slide 17 / 17</span>
+            <span class="slide-counter">Slide 17 / 18</span>
         </div>
     </div>
 
+    
+    <!-- SLIDE 18: ENCERRAMENTO -->
+    <div class="slide-container" id="slide18">
+        <div class="academic-header-info">
+            MO809A_2026S1 - Tópicos em Computação Distribuída<br>
+            Instituto de Computação - Unicamp
+        </div>
+        <div class="content-area">
+            <div
+                style="color: var(--accent); font-weight: bold; font-size: 16px; margin-bottom: 15px; letter-spacing: 2px;">
+                SEMINÁRIO DE PÓS-GRADUAÇÃO</div>
+            <h1 style="font-size: 54px; font-family: 'Crimson Pro', serif; margin-bottom: 10px;">Applying Machine
+                Learning on Big Data<br>With Apache Spark</h1>
+            <p style="color: var(--text-dim); font-size: 20px; font-style: italic;">Benchmark de Modelos de ML em Larga
+                Escala</p>
+
+            <div class="presenter-box">
+                <div style="font-size: 14px; color: var(--accent); text-transform: uppercase; margin-bottom: 8px;">
+                    Apresentador</div>
+                <div style="font-size: 38px; font-weight: 700; color: #fff;">Juan Nascimento</div>
+            </div>
+
+            <div style="margin-top: 40px; font-size: 18px; line-height: 1.6;">
+                Artigo Escolhido: <strong>Elias Dritsas & Maria Trigka (2025)</strong><br>
+                IEEE Access | 9 de Abril de 2026
+            </div>
+        </div>
+        
+        <div class="academic-footer">
+            <span>IC - Unicamp | Juan Nascimento</span>
+            <span class="slide-counter">Slide 18 / 18</span>
+        </div>
+    </div>
+
+    
     <!-- SCRIPTS DE NAVEGAÇÃO E GRÁFICOS (CHART.JS) -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -736,12 +787,34 @@
             const slides = document.querySelectorAll('.slide-container');
             let currentSlide = 0;
 
+            // --- ROUGH NOTATION SETUP ---
+            let annotationGreen = null;
+            let annotationBlue = null;
+            let slide17Step = 0; // 0 = nothing, 1 = green, 2 = blue
+
+            // Wait for the module to load globally before we can use it
+            import('https://unpkg.com/rough-notation?module').then(module => {
+                const annotate = module.annotate;
+                const elGreen = document.querySelector('#mark-green');
+                const elBlue = document.querySelector('#mark-blue');
+                
+                if (elGreen && elBlue) {
+                    annotationGreen = annotate(elGreen, { type: 'highlight', color: 'rgba(63, 185, 80, 0.4)', animationDuration: 800, iterations: 1, padding: 2, strokeWidth: 1.5 });
+                    annotationBlue = annotate(elBlue, { type: 'highlight', color: 'rgba(88, 166, 255, 0.4)', animationDuration: 800, iterations: 1, padding: 2, strokeWidth: 1.5 });
+                }
+            });
+
             function goToSlide(index) {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = index;
                 slides[currentSlide].classList.add('active');
                 
-
+                // Reset slide 17 steps if we navigate away
+                if (currentSlide !== 16) {
+                    slide17Step = 0;
+                    if (annotationGreen) annotationGreen.hide();
+                    if (annotationBlue) annotationBlue.hide();
+                }
 
                 // Força os gráficos a renderizarem corretamente se o slide os contiver
                 window.dispatchEvent(new Event('resize')); 
@@ -750,11 +823,47 @@
                 }
             }
 
+            function handleNext() {
+                // If we are on Slide 17 (index 16), intercept the 'next' action for annotations
+                if (currentSlide === 16) {
+                    if (slide17Step === 0 && annotationGreen) {
+                        annotationGreen.show();
+                        slide17Step = 1;
+                        return; // Stop navigation
+                    } else if (slide17Step === 1 && annotationBlue) {
+                        annotationBlue.show();
+                        slide17Step = 2;
+                        return; // Stop navigation
+                    }
+                }
+                
+                // Normal next slide
+                if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+            }
+
+            function handlePrev() {
+                // Intercept 'prev' action to undo annotations on Slide 17
+                if (currentSlide === 16) {
+                    if (slide17Step === 2 && annotationBlue) {
+                        annotationBlue.hide();
+                        slide17Step = 1;
+                        return; // Stop navigation
+                    } else if (slide17Step === 1 && annotationGreen) {
+                        annotationGreen.hide();
+                        slide17Step = 0;
+                        return; // Stop navigation
+                    }
+                }
+                
+                // Normal prev slide
+                if (currentSlide > 0) goToSlide(currentSlide - 1);
+            }
+
             document.addEventListener('keydown', function (event) {
                 if (event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
-                    if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+                    handleNext();
                 } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
-                    if (currentSlide > 0) goToSlide(currentSlide - 1);
+                    handlePrev();
                 }
             });
 
@@ -765,9 +874,9 @@
                 if (window.getSelection().toString().length > 0) return; // Ignora se estiver selecionando texto
 
                 if (clickX > windowWidth * 0.7) {
-                    if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+                    handleNext();
                 } else if (clickX < windowWidth * 0.3) {
-                    if (currentSlide > 0) goToSlide(currentSlide - 1);
+                    handlePrev();
                 }
             });
 
@@ -810,30 +919,48 @@
             }
 
             // 2. Gráfico de Regressão RMSE (Slide 13)
-            const ctxReg = document.getElementById('chartRegressao');
-            if (ctxReg) {
-                new Chart(ctxReg, {
+            const ctxNYC = document.getElementById('chartRegressaoNYC');
+            if (ctxNYC) {
+                new Chart(ctxNYC, {
                     type: 'bar',
                     data: {
-                        labels: ['LinR (Menos Eficaz)', 'RF (Bom)', 'GBT (Melhor)'],
-                        datasets: [
-                            {
-                                label: 'NYC Taxi (Escala alta - RMSE 5.6 a 8.1)',
-                                data: [8.1, 5.8, 5.6],
-                                backgroundColor: ['rgba(63, 185, 80, 0.4)', 'rgba(88, 166, 255, 0.4)', 'rgba(248, 81, 73, 0.4)'],
-                                borderColor: ['#3fb950', '#58a6ff', '#f85149'],
-                                borderWidth: 2
-                            },
-                            {
-                                label: 'Netflix Prize (Escala Baixa - RMSE 0.95 a 1.18)',
-                                data: [1.18, 1.05, 0.95],
-                                backgroundColor: ['#3fb950', '#58a6ff', '#f85149']
-                            }
-                        ]
+                        labels: ['LinR (Pior)', 'RF (Bom)', 'GBT (Melhor)'],
+                        datasets: [{
+                            data: [8.1, 5.8, 5.6],
+                            backgroundColor: ['#f85149', '#e3b341', '#3fb950'], // Vermelho, Amarelo, Verde
+                            borderRadius: 4
+                        }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            y: { min: 4, max: 9, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            x: { ticks: { color: '#8b949e', font: { size: 12, weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+
+            const ctxNetflix = document.getElementById('chartRegressaoNetflix');
+            if (ctxNetflix) {
+                new Chart(ctxNetflix, {
+                    type: 'bar',
+                    data: {
+                        labels: ['LinR (Pior)', 'RF (Bom)', 'GBT (Melhor)'],
+                        datasets: [{
+                            data: [1.18, 1.05, 0.95],
+                            backgroundColor: ['#f85149', '#e3b341', '#3fb950'], // Vermelho, Amarelo, Verde
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            y: { min: 0.8, max: 1.3, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            x: { ticks: { color: '#8b949e', font: { size: 12, weight: 'bold' } } }
+                        }
                     }
                 });
             }
